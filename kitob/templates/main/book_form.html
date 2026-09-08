@@ -1,0 +1,79 @@
+{%extends 'base.html'%}
+{%load static%}
+
+{%block style%}
+<link rel="stylesheet" href="{%static 'css/pages.css'%}">
+{%endblock%}
+
+{%block main%}
+<div class="container my-5" style="max-width: 720px;">
+
+  {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-success border-0 mb-3 small">{{message}}</div>
+    {%endfor%}
+  {%endif%}
+
+  <div class="contact-form-box">
+
+    <h3 class="fw-bold mb-4" style="color: var(--color-slate-900);">
+      {%if book%}Kitob Ma'lumotlarini Tahrirlash{%else%}Kitob Ma'lumotlarini Kiritish{%endif%}
+    </h3>
+
+    <form method="POST" enctype="multipart/form-data">
+      {%csrf_token%}
+
+      {%for field in form%}
+        {%for error in field.errors%}
+          <p class="small mb-1" style="color:#991b1b;">{{error}}</p>
+        {%endfor%}
+        <div class="mb-3">
+          <label class="form-label">{{field.label}}</label>
+          {{field}}
+        </div>
+      {%endfor%}
+
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>
+          <button type="submit" class="custom-btn-primary me-2">
+            <i class="fa-solid fa-floppy-disk me-1"></i>
+            {%if book%}O'zgarishlarni saqlash{%else%}Saqlash{%endif%}
+          </button>
+          <a href="{%url 'all_books'%}" class="btn btn-outline-secondary btn-sm">Bekor qilish</a>
+        </div>
+
+        {%if book%}
+        <a href="{%url 'book_delete' book.id%}" class="custom-btn-danger">
+          <i class="fa-solid fa-trash me-1"></i>Kitobni o'chirish
+        </a>
+        {%endif%}
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{%endblock%}
+
+{%block footer%}
+<div class="container">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <h5 class="text-white mb-3">LIBERTY.</h5>
+      <p class="small">Yuqori sifatli nashrlar, tahliliy adabiyotlar va professional kitobxonlar markazi.</p>
+    </div>
+    <div class="col-md-4">
+      <h6 class="text-white mb-3">Havolalar</h6>
+      <ul class="list-unstyled small">
+        <li><a href="{%url 'all_books'%}">Bosh sahifa</a></li>
+      </ul>
+    </div>
+    <div class="col-md-4">
+      <h6 class="text-white mb-3">Aloqa</h6>
+      <p class="small mb-1"><i class="fa-solid fa-location-dot me-2"></i> Toshkent, Amir Temur shoh ko'chasi</p>
+      <p class="small"><i class="fa-solid fa-phone me-2"></i> +998 71 200 00 00</p>
+    </div>
+  </div>
+  <div class="text-center pt-4 mt-4 border-top border-secondary small">&copy; 2026 LIBERTY Bookstore. Barcha huquqlar himoyalangan.</div>
+</div>
+{%endblock%}

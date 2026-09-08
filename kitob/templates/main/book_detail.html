@@ -1,0 +1,116 @@
+{%extends 'base.html'%}
+{%load static%}
+
+{%block style%}
+<link rel="stylesheet" href="{%static 'css/pages.css'%}">
+{%endblock%}
+
+{%block main%}
+<div class="container my-5">
+
+  {%if messages%}
+    {%for message in messages%}
+    <div class="alert alert-success border-0 mb-3 small">{{message}}</div>
+    {%endfor%}
+  {%endif%}
+
+  <div class="row g-5">
+
+    <!-- Kitob muqovasi -->
+    <div class="col-md-5">
+      <div class="p-4 bg-white border text-center">
+        {%if book.image%}
+        <img src="{{book.image.url}}" class="img-fluid" alt="{{book.title}}">
+        {%else%}
+        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=500&q=80" class="img-fluid" alt="Kitob muqovasi">
+        {%endif%}
+      </div>
+    </div>
+
+    <!-- Kitob ma'lumotlari -->
+    <div class="col-md-7">
+      <h2 class="fw-bold mb-2">{{book.title}}</h2>
+      <p class="text-muted mb-2">Kategoriya: {{book.category.name}}</p>
+      <div class="h4 fw-bold mb-4">{{book.price}} so'm</div>
+      <p class="lead fs-6 text-secondary mb-4">{{book.introduction}}</p>
+
+      {%if request.user.is_staff%}
+      <div class="d-flex gap-2 mb-4">
+        <a href="{%url 'book_update' book.id%}" class="custom-btn-primary">
+          <i class="fa-solid fa-pen me-1"></i>Tahrirlash
+        </a>
+        <a href="{%url 'book_delete' book.id%}" class="custom-btn-danger">
+          <i class="fa-solid fa-trash me-1"></i>O'chirish
+        </a>
+      </div>
+      {%endif%}
+
+      <a href="{%url 'all_books'%}" class="btn btn-outline-secondary btn-sm">
+        <i class="fa-solid fa-arrow-left me-1"></i>Barcha kitoblarga qaytish
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Izohlar bo'limi -->
+  <section class="mt-5 pt-5 border-top">
+    <h4 class="fw-bold mb-4">Izohlar va Fikr-mulohazalar</h4>
+
+    <div class="mb-5 contact-form-box">
+      {%if request.user.is_authenticated%}
+      <form method="post" action="#">
+        {%csrf_token%}
+        <div class="mb-3">
+          <label class="form-label">Izoh qoldiring</label>
+          <textarea class="form-control" rows="3" name="text" placeholder="Kitob bo'yicha fikringiz..."></textarea>
+        </div>
+        <button type="submit" class="custom-btn-primary">Yuborish</button>
+      </form>
+      {%else%}
+      <p class="text-muted small">Izoh qoldirish uchun tizimga kiring.</p>
+      {%endif%}
+    </div>
+
+    <!-- Qoldirilgan izohlar -->
+    <div class="comment-list">
+      {%for comment in comments%}
+      <div class="comment-item bg-white p-4 border mb-3">
+        <div class="d-flex justify-content-between mb-2">
+          <div>
+            <strong class="me-2">{{comment.user.username}}</strong>
+            <small class="text-muted">{{comment.created|date:"d M, Y"}}</small>
+          </div>
+        </div>
+        <p class="mb-0 text-secondary small">{{comment.text}}</p>
+      </div>
+      {%empty%}
+      <p class="text-muted" style="font-style:italic;">Hozircha izohlar mavjud emas.</p>
+      {%endfor%}
+    </div>
+
+  </section>
+</div>
+{%endblock%}
+
+{%block footer%}
+<div class="container">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <h5 class="text-white mb-3">LIBERTY.</h5>
+      <p class="small">Yuqori sifatli nashrlar, tahliliy adabiyotlar va professional kitobxonlar markazi.</p>
+    </div>
+    <div class="col-md-4">
+      <h6 class="text-white mb-3">Havolalar</h6>
+      <ul class="list-unstyled small">
+        <li><a href="{%url 'all_books'%}">Bosh sahifa</a></li>
+      </ul>
+    </div>
+    <div class="col-md-4">
+      <h6 class="text-white mb-3">Aloqa</h6>
+      <p class="small mb-1"><i class="fa-solid fa-location-dot me-2"></i> Toshkent, Amir Temur shoh ko'chasi</p>
+      <p class="small"><i class="fa-solid fa-phone me-2"></i> +998 71 200 00 00</p>
+    </div>
+  </div>
+  <div class="text-center pt-4 mt-4 border-top border-secondary small">&copy; 2026 LIBERTY Bookstore. Barcha huquqlar himoyalangan.</div>
+</div>
+{%endblock%}
